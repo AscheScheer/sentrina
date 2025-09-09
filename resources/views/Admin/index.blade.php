@@ -2,10 +2,12 @@
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3">
             {{ $admins->links() }}
+            @if (auth()->guard('admin')->check())
             <a href="{{ route('admin.admin.create') }}"
                 style="margin-bottom: 10px; display: inline-block;">
                 <button class="btn btn-primary">Tambah Admin</button>
             </a>
+            @endif
         </div>
 
         @if (session('success'))
@@ -28,7 +30,7 @@
         </div>
         @else
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 container">
-            <thead class="text-sm text-gray-700 uppercase bg-white dark:bg-gray-800">
+            <thead class="text-sm text-gray-700 uppercase dark:bg-gray-800" style="background-color: #cad7ed;">
                 <tr class="border-t border-b dark:border-gray-700">
                     <th class="px-6 py-3 text-center">No</th>
                     <th class="px-6 py-3 text-center">Nama</th>
@@ -41,7 +43,7 @@
             </thead>
             <tbody>
                 @foreach ($admins as $admin)
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50">
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50" style="color: black;">
                     <td class="px-6 py-3 text-center">
                         {{ $loop->iteration + ($admins->currentPage() - 1) * $admins->perPage() }}
                     </td>

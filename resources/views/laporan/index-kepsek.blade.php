@@ -20,12 +20,19 @@ $routelaporan = route('laporan.index');
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
-        <form action="{{ route('laporan.index') }}" method="GET" class="flex items-center gap-4 mb-4 px-3">
+        <form action="{{ route('kepsek.laporan.index') }}" method="GET" class="flex items-center gap-4 mb-4 px-3">
             <div>
                 <label for="tanggal" class="text-sm text-gray-700">Filter Tanggal:</label>
                 <input type="date" name="tanggal" id="tanggal"
                     value="{{ request('tanggal') }}"
                     class="border rounded px-2 py-1 text-sm">
+                <label for="username" class="text-sm text-gray-700">Filter Username:</label>
+                <select name="username" id="username" class="border rounded px-2 py-1 text-sm">
+                    <option value="">-- Pilih User --</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->name }}" {{ request('username') == $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
                 <x-primary-button type="submit" class="ml-2">
                     Filter
                 </x-primary-button>
@@ -41,7 +48,7 @@ $routelaporan = route('laporan.index');
         </div>
         @else
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 container" >
-            <thead class="text-sm text-gray-700 uppercase bg-white dark:bg-gray-800">
+            <thead class="text-sm text-gray-700 uppercase dark:bg-gray-200">
                 <tr class="border-t border-b dark:border-gray-700">
                     <th class="px-6 py-3 text-center">No</th>
                     <th class="px-6 py-3 text-center">Nama</th>
@@ -53,7 +60,7 @@ $routelaporan = route('laporan.index');
             </thead>
             <tbody>
                 @foreach ($laporan as $item)
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50">
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50" style="color: black;">
                     <td class="px-6 py-3 text-center">
                         {{ $loop->iteration + ($laporan->currentPage() - 1) * $laporan->perPage() }}
                     </td>

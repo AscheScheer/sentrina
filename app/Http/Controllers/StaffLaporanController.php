@@ -17,15 +17,23 @@ class StaffLaporanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Laporan::with(['user', 'suratRelasi'])->latest();
+    $query = Laporan::with(['user', 'suratRelasi'])->latest();
+    $users = \App\Models\User::all();
 
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
         }
 
+        // Add username filter
+        if ($request->filled('username')) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->username . '%');
+            });
+        }
+
         $laporan = $query->paginate(10);
 
-        return view('laporan.index-staff', compact('laporan'));
+    return view('laporan.index-staff', compact('laporan', 'users'));
     }
 
     /**

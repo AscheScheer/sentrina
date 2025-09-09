@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login Selector</title>
+    <title>SentriApp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,6 +12,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: whitesmoke;
         }
         .login-box {
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
@@ -37,7 +38,7 @@
             <div class="text-center mb-4">
                 <!-- Placeholder Icon -->
                 <div class="mb-3">
-                    <div style="width: 60px; height: 60px; background: #ccc;" class="mx-auto mb-2 rounded"></div>
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo" width="75">
                 </div>
                 <h2 class="mb-3">Selamat datang!</h2>
 
@@ -47,7 +48,8 @@
         </div>
 
         <!-- Right side (Image) -->
-        <div class="col-md-6 d-none d-md-block login-image" style="background: #ccc;">
+        <div class="col-md-6 d-none d-md-block login-image p-0">
+            <img src="{{ asset('images/side.webp') }}" alt="Login Background" class="img-fluid w-100 h-100" style="object-fit: cover; height: 100%; min-height: 300px;">
         </div>
     </div>
 
