@@ -1,0 +1,97 @@
+@startuml
+' Entities
+class Admin {
+    + id : integer [PK]
+    + name : varchar
+    + email : varchar
+    + password : varchar
+    + created_at : datetime
+    + updated_at : datetime
+}
+
+class Cache {
+    + key : varchar [PK]
+    + value : text
+    + expiration : integer
+}
+
+class CacheLocks {
+    + key : varchar [PK]
+    + owner : varchar
+    + expiration : integer
+}
+
+class Laporan {
+    + id : integer [PK]
+    + ayat_halaman : varchar
+    + tanggal : date
+    + keterangan : text
+    + created_at : datetime
+    + updated_at : datetime
+}
+
+class Migrations {
+    + id : integer [PK]
+    + migration : varchar
+    + batch : integer
+}
+
+class PasswordResetTokens {
+    + email : varchar [PK]
+    + token : varchar
+    + created_at : datetime
+}
+
+class Sessions {
+    + id : varchar [PK]
+    + ip_address : varchar
+    + user_agent : text
+    + payload : text
+    + last_activity : integer
+}
+
+class Staff {
+    + id : integer [PK]
+    + name : varchar
+    + email : varchar
+    + password : varchar
+    + created_at : datetime
+    + updated_at : datetime
+}
+
+class Surat {
+    + id : integer [PK]
+    + nama : varchar
+    + created_at : datetime
+    + updated_at : datetime
+}
+
+class Users {
+    + id : integer [PK]
+    + name : varchar
+    + email : varchar
+    + email_verified_at : datetime
+    + password : varchar
+    + remember_token : varchar
+    + created_at : datetime
+    + updated_at : datetime
+}
+
+' Relationships
+Users "1" -- "0..*" Laporan : creates
+Surat "1" -- "0..*" Laporan : has
+Users "1" -- "0..*" Sessions : maintains
+Users "1" -- "0..1" PasswordResetTokens : requests
+
+' Notes
+note top of Laporan
+    Foreign keys:
+    - user_id → Users(id) CASCADE
+    - surat_id → Surat(id)
+end note
+
+note bottom of Sessions
+    Optional relationship:
+    user_id → Users(id)
+end note
+@enduml
