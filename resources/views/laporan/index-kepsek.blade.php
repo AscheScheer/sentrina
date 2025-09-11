@@ -83,14 +83,16 @@ $routelaporan = route('laporan.index');
                 @endforeach
             </tbody>
         </table>
-        <div style="background-color:#cad7ed; padding: 2px; margin-bottom: 20px; border-radius: 0 0 10px 10px; text-align: center;">
-        <form action="{{ route('kepsek.export.pdf') }}" method="get" target="_blank" class="flex items-center gap-4 mt-4 mb-4 px-3">
-            <input type="date" name="start_date" class="border rounded px-2 py-1 text-sm" required> <p>Sampai</p>
-            <input type="date" name="end_date" class="border rounded px-2 py-1 text-sm" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
-            <x-primary-button type="submit">
-                Export ke PDF
-            </x-primary-button>
-        </form>
+        <div class="bg-[#cad7ed] p-2 mb-5 rounded-b-[10px] text-center">
+            <form action="{{ route('kepsek.export.pdf') }}" method="get" target="_blank"
+                class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mt-4 mb-4 px-3 w-full">
+                <input type="date" name="start_date" class="border rounded px-2 py-1 text-sm w-full sm:w-auto" required>
+                <p class="m-0">Sampai</p>
+                <input type="date" name="end_date" class="border rounded px-2 py-1 text-sm w-full sm:w-auto" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
+                <x-primary-button type="submit" class="w-full sm:w-auto">
+                    Export ke PDF
+                </x-primary-button>
+            </form>
         </div>
 
         @endif

@@ -6,18 +6,21 @@
     $laporanRoute = route('staff.laporan.index');
     $activedashboard = 'staff.dashboard';
     $activelaporan = 'staff.laporan.index';
+    $profileRoute = 'staff.profile.edit';
     } elseif (Auth::guard('admin')->check()) {
     $logoutRoute ='admin.logout';
     $dashboardRoute = route('admin.dashboard');
     $laporanRoute = route('admin.laporan.index');
     $activedashboard = 'admin.dashboard';
     $activelaporan = 'admin.laporan.index';
+    $profileRoute = 'admin.profile.edit';
     } elseif (Auth::guard('kepsek')->check()) {
     $logoutRoute ='kepsek.logout';
     $dashboardRoute = route('kepsek.dashboard');
     $laporanRoute = route('kepsek.laporan.index');
     $activedashboard = 'kepsek.dashboard';
     $activelaporan = 'kepsek.laporan.index';
+    $profileRoute = 'kepsek.profile.edit';
     }
     else {
     $logoutRoute = 'logout';
@@ -25,6 +28,7 @@
     $laporanRoute = route('laporan.index');
     $activedashboard = 'dashboard';
     $activelaporan = 'laporan.index';
+    $profileRoute = 'profile.edit';
     }
     @endphp
     <!-- Primary Navigation Menu -->
@@ -93,11 +97,14 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route($logoutRoute) }}">
                             @csrf
-
+                            <x-responsive-nav-link :href="route($profileRoute)">
+                                {{ __('Change Profile') }}
+                            </x-responsive-nav-link>
                             <x-responsive-nav-link :href="route($logoutRoute)"
                                 onclick="event.preventDefault(); this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-responsive-nav-link>
+
                         </form>
                     </x-slot>
                 </x-dropdown>

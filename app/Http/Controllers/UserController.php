@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -43,10 +44,39 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')->with('success', 'User berhasil ditambahkan.');
     }
+    public function editProfile()
+    {
+        $user = Auth::user(); // ambil user login
+        return view('user.profile', compact('user'));
+    }
 
-    /**
-     * Tampilkan form edit user.
-     */
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        User::where('id', $user->id)->update($data);
+
+        return redirect()->route('dashboard')
+        ->with('success', 'Profil berhasil diperbarui.')
+        ->with('show_alert', true);
+    }
+
+
     public function edit(User $user)
     {
         return view('user.edit', compact('user'));

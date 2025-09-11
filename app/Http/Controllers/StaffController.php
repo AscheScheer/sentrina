@@ -51,7 +51,40 @@ class StaffController extends Controller
     {
         return view('staff.edit', compact('staff'));
     }
+    /**
+     * Tampilkan form edit profile staff.
+     */
+    public function editProfile()
+    {
+        $staff = auth()->guard('staff')->user(); // ambil staff login
+        return view('staff.profile', ['user' => $staff]);
+    }
 
+    public function updateProfile(Request $request)
+    {
+        $staff = auth()->guard('staff')->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:staff,email,' . $staff->id,
+            'password' => 'nullable|string|min:6|confirmed',
+        ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+        ];
+
+        if ($request->filled('password')) {
+            $data['password'] = bcrypt($request->password);
+        }
+
+        Staff::where('id', $staff->id)->update($data);
+
+        return redirect()->route('staff.dashboard')
+            ->with('success', 'Profil berhasil diperbarui.')
+            ->with('show_alert', true);
+    }
     /**
      * Update staff.
      */

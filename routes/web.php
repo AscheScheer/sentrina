@@ -35,6 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('laporan', LaporanController::class);
     Route::get('/export-pdf', [ExportController::class, 'exportPdf'])->name('export.pdf');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::post('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 });
 
 // Staff login routes
@@ -58,6 +60,8 @@ Route::middleware('auth:staff')->group(function () {
     Route::delete('/staff/laporan/{laporan}', [StaffLaporanController::class, 'destroy'])->name('staff.laporan.destroy');
     Route::get('/staff/dashboard', [StaffDashboardController::class, 'index'])->name('staff.dashboard');
     Route::get('/staffexport-pdf', [StaffExportController::class, 'exportPdf'])->name('staff.export.pdf');
+    Route::get('/staff/profile', [StaffController::class, 'editProfile'])->name('staff.profile.edit');
+    Route::post('/staff/profile', [StaffController::class, 'updateProfile'])->name('staff.profile.update');
 });
 // Admin login routes
 Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
@@ -85,6 +89,8 @@ Route::middleware('auth:admin')->group(function () {
     });
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/export-pdf', [AdminExportController::class, 'exportPdf'])->name('admin.export.pdf');
+    Route::get('/admin/profile', [AdminController::class, 'editProfile'])->name('admin.profile.edit');
+    Route::post('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
 });
 
 // Kepsek login routes
@@ -104,6 +110,8 @@ Route::middleware('auth:kepsek')->group(function () {
     Route::get('/kepsek/staff', [StaffController::class, 'index'])->name('kepsek.staff.index');
     Route::get('/kepsek/admin', [AdminController::class, 'index'])->name('kepsek.admin.index');
     Route::get('/kepsek/export-pdf', [App\Http\Controllers\ExportController::class, 'exportPdf'])->name('kepsek.export.pdf');
+    Route::get('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'editProfile'])->name('kepsek.profile.edit');
+    Route::post('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'updateProfile'])->name('kepsek.profile.update');
 });
 
 
