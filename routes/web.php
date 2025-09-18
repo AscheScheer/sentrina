@@ -19,6 +19,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\KepsekLoginController;
 use App\Http\Controllers\KepsekDashboardController;
 use App\Http\Controllers\KepsekLaporanController;
+use App\Http\Controllers\UserImportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -113,6 +114,8 @@ Route::middleware('auth:kepsek')->group(function () {
     Route::get('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'editProfile'])->name('kepsek.profile.edit');
     Route::post('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'updateProfile'])->name('kepsek.profile.update');
 });
+Route::get('/users/import', [UserImportController::class, 'index'])->name('users.import');
+Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import.store');
 
 
 require __DIR__ . '/auth.php';

@@ -2,13 +2,20 @@
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3">
             {{ $users->links() }}
+
             @if (auth()->guard('admin')->check())
-            <a href="{{ route('admin.users.create') }}"
-                style="margin-bottom: 10px; display: inline-block;">
-                <button class="btn btn-primary">Tambah User</button>
-            </a>
+            <div class="flex flex-row gap-2 mb-2">
+                <a href="{{ route('admin.users.create') }}">
+                    <button class="btn btn-primary">Tambah User</button>
+                </a>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
+                    Import User
+                </button>
+            </div>
             @endif
         </div>
+
+
 
         @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show mx-3" role="alert">
@@ -74,4 +81,31 @@
         </table>
         @endif
     </div>
+
+    <!-- Modal Import User -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">Import User dari Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="{{ route('users.import.store') }}" method="POST" enctype="multipart/form-data" class="p-4 rounded-lg shadow" style="background-color: #f0f4fa; border: 1px solid #b0c4de;">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="file" class="form-label font-bold text-gray-700">Pilih File Excel</label>
+                            <input type="file" name="file" id="file" class="form-control border-2 border-blue-300 bg-white" required>
+                        </div>
+                        <button type="submit" class="btn btn-success font-bold px-4 py-2">Import</button>
+                    </form>
+                    <a href="{{ asset('storage/user_import_template.xlsx') }}" class="btn btn-warning mt-2" download>
+                        Download Template
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </x-app-layout>
