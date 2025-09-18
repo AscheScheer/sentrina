@@ -1,2 +1,3 @@
-*
-!.gitignore
+/storage/*
+!/storage/.gitignore
+!/storage/user_import_template.xlsx

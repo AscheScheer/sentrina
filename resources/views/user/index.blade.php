@@ -100,7 +100,7 @@
                         </div>
                         <button type="submit" class="btn btn-success font-bold px-4 py-2">Import</button>
                     </form>
-                    <a href="{{ asset('storage/user_import_template.xlsx') }}" class="btn btn-warning mt-2" download>
+                    <a href="{{ asset('user_import_template.xlsx') }}" class="btn btn-warning mt-2" download>
                         Download Template
                     </a>
                 </div>
