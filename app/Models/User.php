@@ -20,7 +20,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'nis',
+        'kelompok_id', // Diubah dari email ke kelompok_id
         'password',
     ];
 
@@ -42,14 +43,29 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
+            // 'email_verified_at' => 'datetime', (ga dipake)
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'nis';
+    }
     public function setoran()
-{
-    return $this->hasMany(Laporan::class);
-}
+    {
+        return $this->hasMany(Laporan::class);
+    }
+    // Satu User milik satu Kelompok
+    public function kelompok()
+    {
+        return $this->belongsTo(Kelompok::class);
+    }
 }
 
 // \App\Models\User::factory()->create();

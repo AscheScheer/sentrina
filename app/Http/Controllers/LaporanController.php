@@ -16,8 +16,9 @@ class LaporanController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Laporan::with(['user', 'suratRelasi'])
-            ->where('user_id', Auth::id()) // hanya laporan milik user login
+
+        $query = Laporan::with(['user', 'suratRelasi', 'staff'])
+            ->where('user_id', Auth::user()->id) // hanya laporan milik user login
             ->latest();
 
         // Jika ada filter tanggal dari request

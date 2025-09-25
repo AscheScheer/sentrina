@@ -15,7 +15,7 @@ class AdminLaporanController extends Controller
      */
     public function index(Request $request)
     {
-    $query = Laporan::with(['user', 'suratRelasi'])->latest();
+    $query = Laporan::with(['user', 'suratRelasi', 'staff'])->latest();
     $users = \App\Models\User::all();
 
         if ($request->filled('tanggal')) {
@@ -29,7 +29,7 @@ class AdminLaporanController extends Controller
             });
         }
 
-        $laporan = $query->paginate(10);
+        $laporan = $query->paginate(25);
 
     return view('laporan.index-admin', compact('laporan', 'users'));
     }
@@ -41,7 +41,7 @@ class AdminLaporanController extends Controller
     {
         $users = User::all();
         $surat = Surat::all();
-        $latestLaporan = \App\Models\Laporan::with(['user', 'suratRelasi'])
+        $latestLaporan = \App\Models\Laporan::with(['user', 'suratRelasi', 'staff'])
             ->latest()
             ->take(10)
             ->get();
@@ -59,6 +59,7 @@ class AdminLaporanController extends Controller
             'ayat_halaman' => 'required|string',
             'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
+            'juz' => 'nullable|string|max:255',
         ]);
 
         $laporan = Laporan::create([
@@ -67,6 +68,8 @@ class AdminLaporanController extends Controller
             'ayat_halaman' => $request->ayat_halaman,
             'tanggal' => $request->tanggal,
             'keterangan' => $request->keterangan,
+            'juz' => $request->juz,
+            'staff_id' => null, // Admin tidak memiliki staff_id, jadi diisi null
         ]);
         event(new LaporanUpdated($laporan));
         return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil ditambahkan.');
@@ -93,6 +96,7 @@ class AdminLaporanController extends Controller
             'ayat_halaman' => 'required|string',
             'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
+            'juz' => 'nullable|string|max:255',
         ]);
 
         $laporan->update([
@@ -101,6 +105,8 @@ class AdminLaporanController extends Controller
             'ayat_halaman' => $request->ayat_halaman,
             'tanggal' => $request->tanggal,
             'keterangan' => $request->keterangan,
+            'juz' => $request->juz,
+            // staff_id tidak diupdate untuk mempertahankan siapa yang pertama kali input
         ]);
 
         return redirect()->route('admin.laporan.index')->with('success', 'Laporan berhasil diperbarui.');

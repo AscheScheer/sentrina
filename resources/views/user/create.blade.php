@@ -18,21 +18,34 @@
             <!-- Nama -->
             <div class="mb-4">
                 <label for="name" class="block text-gray-700 font-bold mb-2">Nama</label>
-                <input type="text" name="name" id="name" value="{{ old('name') }}"
+                <input type="text" name="name" id="name" value="{{ old('name') }}" placeholder="Nama lengkap siswa"
                     class="w-full px-3 py-2 border rounded" required>
             </div>
 
-            <!-- Email -->
+            <!-- NIS -->
             <div class="mb-4">
-                <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
-                <input type="email" name="email" id="email" value="{{ old('email') }}"
+                <label for="nis" class="block text-gray-700 font-bold mb-2">NIS</label>
+                <input type="text" name="nis" id="nis" placeholder="NIS siswa"
                     class="w-full px-3 py-2 border rounded" required>
+            </div>
+
+            <!-- kelompok  -->
+            <div class="mb-4">
+                <label for="kelompok_id" class="block text-gray-700 font-bold mb-2">Kelompok (Opsional)</label>
+                <select name="kelompok_id" id="kelompok_id" class="w-full px-3 py-2 border rounded">
+                    <option value="">-- Pilih Kelompok --</option>
+                    @foreach($kelompoks as $kelompok)
+                        <option value="{{ $kelompok->id }}" {{ (old('kelompok_id') == $kelompok->id) ? 'selected' : '' }}>
+                            {{ $kelompok->nama }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
 
             <!-- Password -->
             <div class="mb-4">
                 <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
-                <input type="password" name="password" id="password"
+                <input type="password" name="password" id="password" placeholder="minimal 6 huruf/angka"
                     class="w-full px-3 py-2 border rounded" required>
             </div>
 

@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Models\Laporan;
 use App\Models\User;
 use App\Models\Surat;
+use App\Models\Staff;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class LaporanFactory extends Factory
@@ -19,6 +20,11 @@ class LaporanFactory extends Factory
             'ayat_halaman' => $this->faker->bothify('Ayat ##, Halaman ##'),
             'tanggal' => $this->faker->dateTimeBetween('-2 months', 'now')->format('Y-m-d'),
             'keterangan' => $this->faker->optional()->sentence(),
+            'juz' => $this->faker->optional(0.7)->numberBetween(1, 30), // 70% chance ada juz, 1-30
+            'staff_id' => $this->faker->optional(0.8)->randomElement([
+                Staff::inRandomOrder()->first()?->id,
+                null // 20% chance null (laporan lama atau dari admin)
+            ]),
         ];
     }
 }
@@ -31,4 +37,12 @@ class LaporanFactory extends Factory
     or for a single record:
 
     Laporan::factory()->create();
+
+    To create laporan with specific staff:
+
+    Laporan::factory()->create(['staff_id' => 1]);
+
+    To create laporan without staff (admin created):
+
+    Laporan::factory()->create(['staff_id' => null]);
 */

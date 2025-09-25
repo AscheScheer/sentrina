@@ -23,10 +23,10 @@
                     class="w-full px-3 py-2 border rounded" required>
             </div>
 
-            <!-- Email -->
+            <!-- NIS -->
             <div class="mb-4">
-                <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
-                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}"
+                <label for="nis" class="block text-gray-700 font-bold mb-2">NIS</label>
+                <input type="text" name="nis" id="nis" value="{{ old('nis', $user->nis) }}"
                     class="w-full px-3 py-2 border rounded" required>
             </div>
 

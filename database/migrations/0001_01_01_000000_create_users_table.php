@@ -9,20 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    // 0001_01_01_000000_create_users_table.php
+
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('nis')->unique(); // Diubah dari email
+            $table->foreignId('kelompok_id')->nullable()->constrained('kelompoks'); // Relasi ke tabel kelompoks (opsional)
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->string('nis')->primary(); // Diubah dari email
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });

@@ -22,8 +22,9 @@
             <p>Welcome User!</p>
         </div>
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" />
+            <x-input-label for="nis" :value="__('NIS')" />
+            <x-text-input id="nis" class="block mt-1 w-full" type="text" name="nis" :value="old('nis')" required autofocus />
+            <x-input-error :messages="$errors->get('nis')" class="mt-2" />
         </div>
 
         <div class="mt-4">

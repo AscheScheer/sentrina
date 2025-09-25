@@ -15,7 +15,7 @@ class KepsekLaporanController extends Controller
      */
     public function index(Request $request)
     {
-    $query = Laporan::with(['user', 'suratRelasi'])->latest();
+    $query = Laporan::with(['user', 'suratRelasi', 'staff'])->latest();
     $users = \App\Models\User::all();
 
         if ($request->filled('tanggal')) {
@@ -29,7 +29,7 @@ class KepsekLaporanController extends Controller
             });
         }
 
-        $laporan = $query->paginate(10);
+        $laporan = $query->paginate(25);
 
     return view('laporan.index-kepsek', compact('laporan', 'users'));
     }

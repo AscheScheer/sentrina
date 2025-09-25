@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
 	if(Admin::where("email","admin@example.com")->first())return;
         Admin::create([
             'name' => 'Super Admin',
-            'email' => 'admin@example.com',
+            'email' => 'admin@1.com',
             'password' => Hash::make('password'), // Ganti dengan password yang aman
         ]);
     }

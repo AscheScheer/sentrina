@@ -1,3 +1,4 @@
+
 @php
 $routelaporan = route('laporan.index');
 @endphp
@@ -47,6 +48,8 @@ $routelaporan = route('laporan.index');
                     <th class="px-6 py-3 text-center">Nama</th>
                     <th class="px-6 py-3 text-center">Surat</th>
                     <th class="px-6 py-3 text-center">Ayat/Halaman</th>
+                    <th class="px-6 py-3 text-center">Juz</th>
+                    <th class="px-6 py-3 text-center">Staff</th>
                     <th class="px-6 py-3 text-center">Tanggal</th>
                     <th class="px-6 py-3 text-center">Keterangan</th>
                 </tr>
@@ -65,6 +68,12 @@ $routelaporan = route('laporan.index');
                     </td>
                     <td class="px-6 py-3 text-center">
                         {{ $item->ayat_halaman }}
+                    </td>
+                    <td class="px-6 py-3 text-center">
+                        {{ $item->juz ?? '-' }}
+                    </td>
+                    <td class="px-6 py-3 text-center">
+                        {{ $item->staff->name ?? '-' }}
                     </td>
                     <td class="px-6 py-3 text-center">
                         {{ \Carbon\Carbon::parse($item->tanggal)->format('d M Y') }}

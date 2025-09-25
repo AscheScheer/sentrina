@@ -1,17 +1,45 @@
 <x-app-layout>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3">
-            {{ $users->links() }}
+
 
             @if (auth()->guard('admin')->check())
             <div class="flex flex-row gap-2 mb-2">
                 <a href="{{ route('admin.users.create') }}">
-                    <button class="btn btn-primary">Tambah User</button>
+                    <button class="btn btn-success font-bold px-4 py-2">
+                        Tambah User
+                    </button>
                 </a>
-                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#importModal">
-                    Import User
-                </button>
+                <div> <button class="btn btn-success font-bold px-4 py-2" data-bs-toggle="modal" data-bs-target="#importModal">
+                        Import User
+                    </button>
+                </div>
+
+                <div>
+                    <!-- Filter Kelompok -->
+                    <form method="GET" action="{{ route('admin.users.index') }}" class="flex items-center gap-2">
+                        <select name="kelompok_filter" class="form-select border-2 border-gray-300 rounded" onchange="this.form.submit()">
+                            <option value="">Semua Kelompok</option>
+                            @foreach($kelompoks as $kelompok)
+                            <option value="{{ $kelompok->id }}"
+                                {{ request('kelompok_filter') == $kelompok->id ? 'selected' : '' }}>
+                                {{ $kelompok->nama }}
+                            </option>
+                            @endforeach
+                            <option value="null" {{ request('kelompok_filter') === 'null' ? 'selected' : '' }}>
+                                Tanpa Kelompok
+                            </option>
+                        </select>
+
+                        @if(request('kelompok_filter'))
+                        <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary btn-sm">
+                            Reset
+                        </a>
+                        @endif
+                    </form>
+                </div>
             </div>
+
             @endif
         </div>
 
@@ -41,7 +69,8 @@
                 <tr class="border-t border-b dark:border-gray-700">
                     <th class="px-6 py-3 text-center">No</th>
                     <th class="px-6 py-3 text-center">Nama</th>
-                    <th class="px-6 py-3 text-center">Email</th>
+                    <th class="px-6 py-3 text-center">NIS</th>
+                    <th class="px-6 py-3 text-center">Kelompok</th>
                     <th class="px-6 py-3 text-center">Tanggal Daftar</th>
                     @if (!auth()->guard('kepsek')->check())
                     <th class="px-6 py-3 text-center">Action</th>
@@ -58,7 +87,9 @@
                         {{ $user->name }}
                     </td>
                     <td class="px-6 py-3 text-center">
-                        {{ $user->email }}
+                        {{ $user->nis }}
+                    <td class="px-6 py-3 text-center">
+                        {{ $user->kelompok->nama ?? '-' }}
                     </td>
                     <td class="px-6 py-3 text-center">
                         {{ \Carbon\Carbon::parse($user->created_at)->format('d M Y') }}
@@ -79,7 +110,11 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="flex justify-center my-4 py-3" style="background-color: #f0f4fa; border-top: 1px solid #b0c4de;">
+            {{ $users->onEachSide(1)->links() }}
+        </div>
         @endif
+
     </div>
 
     <!-- Modal Import User -->

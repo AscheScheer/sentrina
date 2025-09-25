@@ -16,6 +16,8 @@ class Laporan extends Model
         'ayat_halaman',
         'tanggal',
         'keterangan',
+        'juz',
+        'staff_id',
     ];
 
     // Relationship to User
@@ -28,6 +30,12 @@ class Laporan extends Model
     public function suratRelasi()
     {
         return $this->belongsTo(Surat::class, 'surat_id');
+    }
+
+    // Relationship to Staff
+    public function staff()
+    {
+        return $this->belongsTo(Staff::class);
     }
 }
 

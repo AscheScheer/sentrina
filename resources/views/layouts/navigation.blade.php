@@ -60,6 +60,9 @@
                     <x-nav-link :href="route('admin.admin.index')" :active="request()->routeIs('admin.admin.index')">
                         {{ __('Data Admin') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.kelompoks.index')" :active="request()->routeIs('admin.kelompoks.index')">
+                        {{ __('Data Kelompok') }}
+                    </x-nav-link>
                     @elseif (Auth::guard('kepsek')->check())
                     <x-nav-link :href="route('kepsek.users.index')" :active="request()->routeIs('kepsek.users.index')">
                         {{ __('Data Siswa') }}
@@ -69,6 +72,9 @@
                     </x-nav-link>
                     <x-nav-link :href="route('kepsek.admin.index')" :active="request()->routeIs('kepsek.admin.index')">
                         {{ __('Data Admin') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('kepsek.kelompoks.index')" :active="request()->routeIs('kepsek.kelompoks.index')">
+                        {{ __('Data Kelompok') }}
                     </x-nav-link>
                     @endif
 

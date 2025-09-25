@@ -10,6 +10,7 @@ use App\Http\Controllers\StaffLaporanController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\KelompokController;
 use App\Http\Controllers\StaffDashboardController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ExportController;
@@ -87,6 +88,7 @@ Route::middleware('auth:admin')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('staff', StaffController::class);
         Route::resource('admin', AdminController::class);
+        Route::resource('kelompoks', KelompokController::class);
     });
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/admin/export-pdf', [AdminExportController::class, 'exportPdf'])->name('admin.export.pdf');
@@ -113,6 +115,7 @@ Route::middleware('auth:kepsek')->group(function () {
     Route::get('/kepsek/export-pdf', [App\Http\Controllers\ExportController::class, 'exportPdf'])->name('kepsek.export.pdf');
     Route::get('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'editProfile'])->name('kepsek.profile.edit');
     Route::post('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'updateProfile'])->name('kepsek.profile.update');
+    Route::resource('kepsek/kelompoks', KelompokController::class)->names('kepsek.kelompoks');
 });
 Route::get('/users/import', [UserImportController::class, 'index'])->name('users.import');
 Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import.store');

@@ -47,6 +47,7 @@
             <a href="/login" class="text-muted underline">Login disini</a>
             atau
             <a href="/staff/login" class="text-muted underline">Login Staff.</a>
+            <br>Admin? <a href="/admin/login" class="text-muted underline">Login Disini</a>
         </small>
     </div>
 </x-guest-layout>

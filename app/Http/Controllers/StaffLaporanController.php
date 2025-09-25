@@ -17,7 +17,7 @@ class StaffLaporanController extends Controller
      */
     public function index(Request $request)
     {
-    $query = Laporan::with(['user', 'suratRelasi'])->latest();
+    $query = Laporan::with(['user', 'suratRelasi', 'staff'])->latest();
     $users = \App\Models\User::all();
 
         if ($request->filled('tanggal')) {
@@ -31,7 +31,7 @@ class StaffLaporanController extends Controller
             });
         }
 
-        $laporan = $query->paginate(10);
+        $laporan = $query->paginate(25);
 
     return view('laporan.index-staff', compact('laporan', 'users'));
     }
@@ -43,7 +43,7 @@ class StaffLaporanController extends Controller
     {
         $users = User::all();
         $surat = Surat::all();
-        $latestLaporan = \App\Models\Laporan::with(['user', 'suratRelasi'])
+        $latestLaporan = \App\Models\Laporan::with(['user', 'suratRelasi', 'staff'])
             ->latest()
             ->take(10)
             ->get();
@@ -61,6 +61,7 @@ class StaffLaporanController extends Controller
             'ayat_halaman' => 'required|string',
             'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
+            'juz' => 'nullable|string|max:255',
         ]);
 
         $laporan = Laporan::create([
@@ -69,6 +70,8 @@ class StaffLaporanController extends Controller
             'ayat_halaman' => $request->ayat_halaman,
             'tanggal' => $request->tanggal,
             'keterangan' => $request->keterangan,
+            'juz' => $request->juz,
+            'staff_id' => Auth::guard('staff')->id(), // Auto-fill dengan staff yang login
         ]);
         event(new LaporanUpdated($laporan));
         return redirect()->route('staff.laporan.index')->with('success', 'Laporan berhasil ditambahkan.');
@@ -95,6 +98,7 @@ class StaffLaporanController extends Controller
             'ayat_halaman' => 'required|string',
             'tanggal' => 'required|date',
             'keterangan' => 'nullable|string',
+            'juz' => 'nullable|string|max:255',
         ]);
 
         $laporan->update([
@@ -103,6 +107,8 @@ class StaffLaporanController extends Controller
             'ayat_halaman' => $request->ayat_halaman,
             'tanggal' => $request->tanggal,
             'keterangan' => $request->keterangan,
+            'juz' => $request->juz,
+            // staff_id tidak diupdate karena harus tetap sesuai staff yang pertama kali input
         ]);
 
         return redirect()->route('staff.laporan.index')->with('success', 'Laporan berhasil diperbarui.');
