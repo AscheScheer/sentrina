@@ -147,6 +147,9 @@
             <x-responsive-nav-link :href="route('admin.admin.index')" :active="request()->routeIs('admin.admin.index')">
                 {{ __('Data Admin') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.kelompoks.index')" :active="request()->routeIs('admin.kelompoks.index')">
+                {{ __('Data Kelompok') }}
+            </x-responsive-nav-link>
             @endif
         </div>
 

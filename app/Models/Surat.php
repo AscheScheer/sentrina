@@ -18,7 +18,7 @@ class Surat extends Model
      */
     public function laporanSetoran()
     {
-        return $this->hasMany(Laporan::class, 'surat');
+        return $this->hasMany(Laporan::class, 'surat_id');
     }
 }
 

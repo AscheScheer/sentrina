@@ -10,10 +10,11 @@ return new class extends Migration
     {
         Schema::create('laporan', function (Blueprint $table) {
             $table->id();
-
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('surat_id')->constrained('surat');
             $table->string('ayat_halaman');
+            $table->string('juz')->nullable();
+            $table->foreignId('staff_id')->nullable()->constrained('staff');
             $table->date('tanggal');
             $table->text('keterangan')->nullable();
             $table->timestamps();

@@ -16,26 +16,27 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('nis')->unique(); // Diubah dari email
-            $table->foreignId('kelompok_id')->nullable()->constrained('kelompoks'); // Relasi ke tabel kelompoks (opsional)
+            $table->string('nis', 20)->unique();
+            $table->foreignId('kelompok_id')->nullable()->constrained('kelompoks');
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
         });
 
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('nis')->primary(); // Diubah dari email
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
-
         Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->string('id', 191)->primary(); // fix max key length
             $table->foreignId('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');
             $table->integer('last_activity')->index();
+        });
+
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('nis', 20)->primary(); // Diubah dari email
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
         });
     }
 

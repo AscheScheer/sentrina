@@ -11,7 +11,12 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $surat = Surat::where('user_id', $user->id)->get();
+
+        // Get surat that the user has reported (through laporan)
+        $surat = Surat::whereHas('laporanSetoran', function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->get();
+
         $latestLaporan = Laporan::with(['user', 'suratRelasi'])
             ->where('user_id', $user->id)
             ->latest()

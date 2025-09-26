@@ -32,6 +32,9 @@ $routelaporan = route('admin.laporan.index');
                 <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
                     🔍 Filter Data
                 </button>
+                <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exportModal">
+                    📄 Export PDF
+                </button>
 
                 <!-- Active Filters Display -->
                 @if(request()->hasAny(['tanggal', 'username', 'kelompok']))
@@ -103,6 +106,62 @@ $routelaporan = route('admin.laporan.index');
                 </div>
             </div>
         </div>
+
+        <!-- Export Modal -->
+        <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exportModalLabel">Export Laporan ke PDF</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('admin.export.pdf') }}" method="get" target="_blank">
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label">Rentang Tanggal <span class="text-danger">*</span></label>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <input type="date" name="start_date" class="form-control" required>
+                                            <small class="text-muted">Tanggal Mulai</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <input type="date" name="end_date" class="form-control" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
+                                            <small class="text-muted">Tanggal Akhir</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <label for="export_username" class="form-label">Filter Nama (Opsional)</label>
+                                    <select name="username" id="export_username" class="form-select">
+                                        <option value="">-- Semua User --</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->name }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="export_kelompok" class="form-label">Filter Kelompok (Opsional)</label>
+                                    <select name="kelompok" id="export_kelompok" class="form-select">
+                                        <option value="">-- Semua Kelompok --</option>
+                                        @foreach($kelompoks as $kelompok)
+                                            <option value="{{ $kelompok->nama }}">{{ $kelompok->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-file-pdf me-1"></i>Export PDF
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
         @if ($laporan->isEmpty())
         <div class="text-black p-3 rounded mb-3 text-center">
             Data laporan belum tersedia!
@@ -167,17 +226,6 @@ $routelaporan = route('admin.laporan.index');
                 @endforeach
             </tbody>
         </table>
-        <div class="bg-[#cad7ed] p-2 mb-5 rounded-b-[10px] text-center">
-            <form action="{{ route('admin.export.pdf') }}" method="get" target="_blank"
-                class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mt-4 mb-4 px-3 w-full">
-                <input type="date" name="start_date" class="border rounded px-2 py-1 text-sm w-full sm:w-auto" required>
-                <p class="m-0">Sampai</p>
-                <input type="date" name="end_date" class="border rounded px-2 py-1 text-sm w-full sm:w-auto" value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
-                <x-primary-button type="submit" class="w-full sm:w-auto">
-                    Export ke PDF
-                </x-primary-button>
-            </form>
-        </div>
         @endif
     </div>
 
@@ -233,10 +281,32 @@ $routelaporan = route('admin.laporan.index');
                 });
             });
 
-            // Destroy Select2 when modal is hidden to prevent conflicts
+            // Initialize Select2 for export modal dropdowns
+            $('#exportModal').on('shown.bs.modal', function () {
+                $('#export_username').select2({
+                    placeholder: "-- Semua User --",
+                    allowClear: true,
+                    width: '100%',
+                    dropdownParent: $('#exportModal')
+                });
+
+                $('#export_kelompok').select2({
+                    placeholder: "-- Semua Kelompok --",
+                    allowClear: true,
+                    width: '100%',
+                    dropdownParent: $('#exportModal')
+                });
+            });
+
+            // Destroy Select2 when modals are hidden to prevent conflicts
             $('#filterModal').on('hidden.bs.modal', function () {
                 $('#modal_username').select2('destroy');
                 $('#modal_kelompok').select2('destroy');
+            });
+
+            $('#exportModal').on('hidden.bs.modal', function () {
+                $('#export_username').select2('destroy');
+                $('#export_kelompok').select2('destroy');
             });
         });
     </script>
