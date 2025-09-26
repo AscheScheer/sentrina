@@ -20,27 +20,83 @@ $routelaporan = route('laporan.index');
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         @endif
-        <form action="{{ route('kepsek.laporan.index') }}" method="GET" class="flex items-center gap-4 mb-4 px-3">
-            <div>
-                <label for="tanggal" class="text-sm text-gray-700">Filter Tanggal:</label>
-                <input type="date" name="tanggal" id="tanggal"
-                    value="{{ request('tanggal') }}"
-                    class="border rounded px-2 py-1 text-sm">
-                <label for="username" class="text-sm text-gray-700">Filter Username:</label>
-                <select name="username" id="username" class="border rounded px-2 py-1 text-sm">
-                    <option value="">-- Pilih User --</option>
-                    @foreach($users as $user)
-                        <option value="{{ $user->name }}" {{ request('username') == $user->name ? 'selected' : '' }}>{{ $user->name }}</option>
-                    @endforeach
-                </select>
-                <x-primary-button type="submit" class="ml-2">
-                    Filter
-                </x-primary-button>
-                <x-primary-button type="button" onclick="window.location='{{ $routelaporan }}'" class="ml-2">
-                    Reset
-                </x-primary-button>
+        <!-- Filter Button and Active Filters Display -->
+        <div class="flex items-center justify-between mb-4 px-3">
+            <div class="flex items-center gap-3">
+                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#filterModal">
+                    🔍 Filter Data
+                </button>
+
+                <!-- Active Filters Display -->
+                @if(request()->hasAny(['tanggal', 'username', 'kelompok']))
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-sm text-gray-600">Filter aktif:</span>
+                    @if(request('tanggal'))
+                        <span class="badge bg-primary">Tanggal: {{ request('tanggal') }}</span>
+                    @endif
+                    @if(request('username'))
+                        <span class="badge bg-success">Nama: {{ request('username') }}</span>
+                    @endif
+                    @if(request('kelompok'))
+                        <span class="badge bg-info">Kelompok: {{ request('kelompok') }}</span>
+                    @endif
+                    <a href="{{ $routelaporan }}" class="btn btn-sm btn-outline-secondary">
+                        ✖ Reset
+                    </a>
+                </div>
+                @endif
             </div>
-        </form>
+        </div>
+
+        <!-- Filter Modal -->
+        <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Filter Laporan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('kepsek.laporan.index') }}" method="GET">
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="modal_tanggal" class="form-label">Filter Tanggal</label>
+                                    <input type="date" name="tanggal" id="modal_tanggal"
+                                           value="{{ request('tanggal') }}" class="form-control">
+                                </div>
+                                <div class="col-12">
+                                    <label for="modal_username" class="form-label">Filter Nama</label>
+                                    <select name="username" id="modal_username" class="form-select">
+                                        <option value="">-- Pilih User --</option>
+                                        @foreach($users as $user)
+                                            <option value="{{ $user->name }}" {{ request('username') == $user->name ? 'selected' : '' }}>
+                                                {{ $user->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="modal_kelompok" class="form-label">Filter Kelompok</label>
+                                    <select name="kelompok" id="modal_kelompok" class="form-select">
+                                        <option value="">-- Pilih Kelompok --</option>
+                                        @foreach($kelompoks as $kelompok)
+                                            <option value="{{ $kelompok->nama }}" {{ request('kelompok') == $kelompok->nama ? 'selected' : '' }}>
+                                                {{ $kelompok->nama }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                            <a href="{{ $routelaporan }}" class="btn btn-outline-warning">Reset Filter</a>
+                            <button type="submit" class="btn btn-primary">Terapkan Filter</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         @if ($laporan->isEmpty())
         <div class="text-black p-3 rounded mb-3 text-center">
@@ -52,6 +108,7 @@ $routelaporan = route('laporan.index');
                 <tr class="border-t border-b dark:border-gray-700">
                     <th class="px-6 py-3 text-center">No</th>
                     <th class="px-6 py-3 text-center">Nama</th>
+                    <th class="px-6 py-3 text-center">Kelompok</th>
                     <th class="px-6 py-3 text-center">Surat</th>
                     <th class="px-6 py-3 text-center">Ayat/Halaman</th>
                     <th class="px-6 py-3 text-center">Juz</th>
@@ -68,6 +125,9 @@ $routelaporan = route('laporan.index');
                     </td>
                     <td class="px-6 py-3 text-center">
                         {{ $item->user->name ?? 'Error' }}
+                    </td>
+                    <td class="px-6 py-3 text-center">
+                        {{ $item->user->kelompok->nama ?? '-' }}
                     </td>
                     <td class="px-6 py-3 text-center">
                         {{ $item->suratRelasi->nama ?? 'Error' }}
@@ -105,4 +165,64 @@ $routelaporan = route('laporan.index');
 
         @endif
     </div>
+
+    <style>
+        /* Custom styling for Select2 to match the existing form styling */
+        .select2-container--default .select2-selection--single {
+            height: 38px;
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 28px;
+            color: #374151;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px;
+        }
+
+        .select2-dropdown {
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+        }
+
+        .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2 for modal dropdowns
+            $('#filterModal').on('shown.bs.modal', function () {
+                // Initialize Select2 for the username dropdown in modal
+                $('#modal_username').select2({
+                    placeholder: "-- Pilih User --",
+                    allowClear: true,
+                    width: '100%',
+                    dropdownParent: $('#filterModal')
+                });
+
+                // Initialize Select2 for the kelompok dropdown in modal
+                $('#modal_kelompok').select2({
+                    placeholder: "-- Pilih Kelompok --",
+                    allowClear: true,
+                    width: '100%',
+                    dropdownParent: $('#filterModal')
+                });
+            });
+
+            // Destroy Select2 when modal is hidden to prevent conflicts
+            $('#filterModal').on('hidden.bs.modal', function () {
+                $('#modal_username').select2('destroy');
+                $('#modal_kelompok').select2('destroy');
+            });
+        });
+    </script>
 </x-app-layout>

@@ -15,8 +15,9 @@ class AdminLaporanController extends Controller
      */
     public function index(Request $request)
     {
-    $query = Laporan::with(['user', 'suratRelasi', 'staff'])->latest();
+    $query = Laporan::with(['user.kelompok', 'suratRelasi', 'staff'])->latest();
     $users = \App\Models\User::all();
+    $kelompoks = \App\Models\Kelompok::all();
 
         if ($request->filled('tanggal')) {
             $query->whereDate('tanggal', $request->tanggal);
@@ -29,9 +30,16 @@ class AdminLaporanController extends Controller
             });
         }
 
+        // Add kelompok filter
+        if ($request->filled('kelompok')) {
+            $query->whereHas('user.kelompok', function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->kelompok . '%');
+            });
+        }
+
         $laporan = $query->paginate(25);
 
-    return view('laporan.index-admin', compact('laporan', 'users'));
+    return view('laporan.index-admin', compact('laporan', 'users', 'kelompoks'));
     }
 
     /**

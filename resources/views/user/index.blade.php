@@ -3,8 +3,9 @@
         <div class="relative p-3">
 
 
-            @if (auth()->guard('admin')->check())
+            @if (auth()->guard('admin')->check() || auth()->guard('kepsek')->check())
             <div class="flex flex-row gap-2 mb-2">
+                @if (auth()->guard('admin')->check())
                 <a href="{{ route('admin.users.create') }}">
                     <button class="btn btn-success font-bold px-4 py-2">
                         Tambah User
@@ -14,10 +15,11 @@
                         Import User
                     </button>
                 </div>
+                @endif
 
                 <div>
                     <!-- Filter Kelompok -->
-                    <form method="GET" action="{{ route('admin.users.index') }}" class="flex items-center gap-2">
+                    <form method="GET" action="{{ auth()->guard('admin')->check() ? route('admin.users.index') : route('kepsek.users.index') }}" class="flex items-center gap-2">
                         <select name="kelompok_filter" class="form-select border-2 border-gray-300 rounded" onchange="this.form.submit()">
                             <option value="">Semua Kelompok</option>
                             @foreach($kelompoks as $kelompok)
@@ -32,7 +34,7 @@
                         </select>
 
                         @if(request('kelompok_filter'))
-                        <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary btn-sm">
+                        <a href="{{ auth()->guard('admin')->check() ? route('admin.users.index') : route('kepsek.users.index') }}" class="btn btn-outline-secondary btn-sm">
                             Reset
                         </a>
                         @endif
@@ -72,8 +74,10 @@
                     <th class="px-6 py-3 text-center">NIS</th>
                     <th class="px-6 py-3 text-center">Kelompok</th>
                     <th class="px-6 py-3 text-center">Tanggal Daftar</th>
-                    @if (!auth()->guard('kepsek')->check())
+                    @if (auth()->guard('admin')->check())
                     <th class="px-6 py-3 text-center">Action</th>
+                    @elseif (auth()->guard('kepsek')->check())
+                    <th class="px-6 py-3 text-center">Status</th>
                     @endif
                 </tr>
             </thead>
@@ -94,7 +98,7 @@
                     <td class="px-6 py-3 text-center">
                         {{ \Carbon\Carbon::parse($user->created_at)->format('d M Y') }}
                     </td>
-                    @if (!auth()->guard('kepsek')->check())
+                    @if (auth()->guard('admin')->check())
                     <td class="px-6 py-3 text-center space-x-2">
                         <a href="{{ route('admin.users.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900">Edit</a>
                         <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
@@ -104,6 +108,10 @@
                             @method('DELETE')
                             <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
                         </form>
+                    </td>
+                    @elseif (auth()->guard('kepsek')->check())
+                    <td class="px-6 py-3 text-center">
+                        <span class="text-gray-500 text-sm">View Only</span>
                     </td>
                     @endif
                 </tr>

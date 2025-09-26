@@ -18,9 +18,9 @@ class KepsekSeeder extends Seeder
         if(Kepsek::where("email","kepsek@example.com")->first()) return;
 
         Kepsek::create([
-            'name' => 'Kepala Sekolah',
-            'email' => 'kepsek@example.com',
-            'password' => Hash::make('password'),
+            'name' => 'Nurul Amal',
+            'email' => 'nurulamalhrd@gmail.com',
+            'password' => Hash::make('Nurulamal!@#'),
         ]);
     }
 }
