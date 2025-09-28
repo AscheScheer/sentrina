@@ -21,6 +21,7 @@ use App\Http\Controllers\Auth\KepsekLoginController;
 use App\Http\Controllers\KepsekDashboardController;
 use App\Http\Controllers\KepsekLaporanController;
 use App\Http\Controllers\UserImportController;
+use App\Http\Controllers\StaffImportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -119,6 +120,7 @@ Route::middleware('auth:kepsek')->group(function () {
 });
 Route::get('/users/import', [UserImportController::class, 'index'])->name('users.import');
 Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import.store');
+Route::post('/staff/import', [StaffImportController::class, 'import'])->name('staff.import.store');
 
 
 require __DIR__ . '/auth.php';

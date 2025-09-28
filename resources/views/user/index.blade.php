@@ -140,6 +140,7 @@
                         <div class="mb-3">
                             <label for="file" class="form-label font-bold text-gray-700">Pilih File Excel</label>
                             <input type="file" name="file" id="file" class="form-control border-2 border-blue-300 bg-white" required>
+                            <small class="text-muted">Tolong upload sesuai template yang tersedia</small>
                         </div>
                         <button type="submit" class="btn btn-success font-bold px-4 py-2">Import</button>
                     </form>

@@ -1,13 +1,21 @@
 <x-app-layout>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3">
-            {{ $staffs->links() }}
             @if (auth()->guard('admin')->check())
-                <a href="{{ route('admin.staff.create') }}"
-                    style="margin-bottom: 10px; display: inline-block;">
-                    <button class="btn btn-primary">Tambah Staff</button>
+            <div class="flex flex-row gap-2 mb-2">
+                <a href="{{ route('admin.staff.create') }}">
+                    <button class="btn btn-success font-bold px-4 py-2">
+                        Tambah Staff
+                    </button>
                 </a>
+                <div>
+                    <button class="btn btn-success font-bold px-4 py-2" data-bs-toggle="modal" data-bs-target="#importStaffModal">
+                        Import Staff
+                    </button>
+                </div>
+            </div>
             @endif
+            {{ $staffs->links() }}
         </div>
 
         @if (session('success'))
@@ -73,5 +81,32 @@
             </tbody>
         </table>
         @endif
+    </div>
+
+    <!-- Modal Import Staff -->
+    <div class="modal fade" id="importStaffModal" tabindex="-1" aria-labelledby="importStaffModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importStaffModalLabel">Import Staff dari Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="{{ route('staff.import.store') }}" method="POST" enctype="multipart/form-data" class="p-4 rounded-lg shadow" style="background-color: #f0f4fa; border: 1px solid #b0c4de;">
+                        @csrf
+                        <div class="mb-3">
+                            <label for="staff_file" class="form-label font-bold text-gray-700">Pilih File Excel</label>
+                            <input type="file" name="file" id="staff_file" class="form-control border-2 border-blue-300 bg-white" required>
+                            <small class="text-muted">Tolong upload sesuai template yang tersedia</small>
+                        </div>
+                        <button type="submit" class="btn btn-success font-bold px-4 py-2">Import</button>
+                    </form>
+                    <a href="{{ asset('staff_import_template.xlsx') }}" class="btn btn-warning mt-2" download>
+                        Download Template
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </x-app-layout>
