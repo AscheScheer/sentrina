@@ -61,10 +61,29 @@ class User extends Authenticatable
     {
         return $this->hasMany(Laporan::class);
     }
+
     // Satu User milik satu Kelompok
     public function kelompok()
     {
         return $this->belongsTo(Kelompok::class);
+    }
+
+    // Relationship ke HasilUjian
+    public function hasilUjian()
+    {
+        return $this->hasMany(HasilUjian::class);
+    }
+
+    // Get total juz yang sudah diuji
+    public function getTotalJuzUjianAttribute()
+    {
+        return $this->hasilUjian->count();
+    }
+
+    // Get ujian terakhir
+    public function ujianTerakhir()
+    {
+        return $this->hasOne(HasilUjian::class)->latest();
     }
 }
 

@@ -18,6 +18,8 @@ use App\Http\Controllers\StaffExportController;
 use App\Http\Controllers\AdminExportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\KepsekLoginController;
+use App\Http\Controllers\HasilUjianController;
+use App\Http\Controllers\HasilUjianImportController;
 use App\Http\Controllers\KepsekDashboardController;
 use App\Http\Controllers\KepsekLaporanController;
 use App\Http\Controllers\UserImportController;
@@ -40,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [UserController::class, 'editProfile'])->name('profile.edit');
     Route::post('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/hasil-ujian', [HasilUjianController::class, 'userIndex'])->name('hasil-ujian.index');
 });
 
 // Staff login routes
@@ -65,6 +68,18 @@ Route::middleware('auth:staff')->group(function () {
     Route::get('/staffexport-pdf', [StaffExportController::class, 'exportPdf'])->name('staff.export.pdf');
     Route::get('/staff/profile', [StaffController::class, 'editProfile'])->name('staff.profile.edit');
     Route::post('/staff/profile', [StaffController::class, 'updateProfile'])->name('staff.profile.update');
+
+    // Routes untuk Hasil Ujian - Staff
+    Route::get('/staff/hasil-ujian', [HasilUjianController::class, 'index'])->name('staff.hasil-ujian.index');
+    Route::get('/staff/hasil-ujian/create', [HasilUjianController::class, 'create'])->name('staff.hasil-ujian.create');
+    Route::post('/staff/hasil-ujian', [HasilUjianController::class, 'store'])->name('staff.hasil-ujian.store');
+    Route::get('/staff/hasil-ujian/{hasilUjian}/edit', [HasilUjianController::class, 'edit'])->name('staff.hasil-ujian.edit');
+    Route::put('/staff/hasil-ujian/{hasilUjian}', [HasilUjianController::class, 'update'])->name('staff.hasil-ujian.update');
+    Route::delete('/staff/hasil-ujian/{hasilUjian}', [HasilUjianController::class, 'destroy'])->name('staff.hasil-ujian.destroy');
+
+    // Import routes untuk Hasil Ujian - Staff
+    Route::post('/staff/hasil-ujian/import', [HasilUjianImportController::class, 'import'])->name('staff.hasil-ujian.import');
+    Route::get('/staff/hasil-ujian/template', [HasilUjianImportController::class, 'downloadTemplate'])->name('staff.hasil-ujian.template');
 });
 // Admin login routes
 Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
@@ -95,6 +110,18 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('/admin/export-pdf', [AdminExportController::class, 'exportPdf'])->name('admin.export.pdf');
     Route::get('/admin/profile', [AdminController::class, 'editProfile'])->name('admin.profile.edit');
     Route::post('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+
+    // Routes untuk Hasil Ujian - Admin
+    Route::get('/admin/hasil-ujian', [HasilUjianController::class, 'index'])->name('admin.hasil-ujian.index');
+    Route::get('/admin/hasil-ujian/create', [HasilUjianController::class, 'create'])->name('admin.hasil-ujian.create');
+    Route::post('/admin/hasil-ujian', [HasilUjianController::class, 'store'])->name('admin.hasil-ujian.store');
+    Route::get('/admin/hasil-ujian/{hasilUjian}/edit', [HasilUjianController::class, 'edit'])->name('admin.hasil-ujian.edit');
+    Route::put('/admin/hasil-ujian/{hasilUjian}', [HasilUjianController::class, 'update'])->name('admin.hasil-ujian.update');
+    Route::delete('/admin/hasil-ujian/{hasilUjian}', [HasilUjianController::class, 'destroy'])->name('admin.hasil-ujian.destroy');
+
+    // Import routes untuk Hasil Ujian - Admin
+    Route::post('/admin/hasil-ujian/import', [HasilUjianImportController::class, 'import'])->name('admin.hasil-ujian.import');
+    Route::get('/admin/hasil-ujian/template', [HasilUjianImportController::class, 'downloadTemplate'])->name('admin.hasil-ujian.template');
 });
 
 // Kepsek login routes
@@ -117,6 +144,9 @@ Route::middleware('auth:kepsek')->group(function () {
     Route::get('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'editProfile'])->name('kepsek.profile.edit');
     Route::post('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'updateProfile'])->name('kepsek.profile.update');
     Route::resource('kepsek/kelompoks', KelompokController::class)->names('kepsek.kelompoks');
+
+    // Routes untuk Hasil Ujian - Kepsek (Read Only)
+    Route::get('/kepsek/hasil-ujian', [HasilUjianController::class, 'index'])->name('kepsek.hasil-ujian.index');
 });
 Route::get('/users/import', [UserImportController::class, 'index'])->name('users.import');
 Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import.store');

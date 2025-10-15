@@ -6,6 +6,10 @@ use App\Models\Kepsek;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use App\Models\Kelompok;
+use Database\Seeders\SuratSeeder;
+use Database\Seeders\AdminSeeder;
+use Database\Seeders\KepsekSeeder;
+use Database\Seeders\HasilUjianSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -41,6 +45,10 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             KepsekSeeder::class,
+        ]);
+
+        $this->call([
+            HasilUjianSeeder::class,
         ]);
     }
 }

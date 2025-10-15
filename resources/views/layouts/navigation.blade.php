@@ -4,30 +4,38 @@
     $logoutRoute = 'staff.logout';
     $dashboardRoute = route('staff.dashboard');
     $laporanRoute = route('staff.laporan.index');
+    $hasilUjianRoute = route('staff.hasil-ujian.index');
     $activedashboard = 'staff.dashboard';
     $activelaporan = 'staff.laporan.index';
+    $activehasilujian = 'staff.hasil-ujian.*';
     $profileRoute = 'staff.profile.edit';
     } elseif (Auth::guard('admin')->check()) {
     $logoutRoute ='admin.logout';
     $dashboardRoute = route('admin.dashboard');
     $laporanRoute = route('admin.laporan.index');
+    $hasilUjianRoute = route('admin.hasil-ujian.index');
     $activedashboard = 'admin.dashboard';
     $activelaporan = 'admin.laporan.index';
+    $activehasilujian = 'admin.hasil-ujian.*';
     $profileRoute = 'admin.profile.edit';
     } elseif (Auth::guard('kepsek')->check()) {
     $logoutRoute ='kepsek.logout';
     $dashboardRoute = route('kepsek.dashboard');
     $laporanRoute = route('kepsek.laporan.index');
+    $hasilUjianRoute = route('kepsek.hasil-ujian.index');
     $activedashboard = 'kepsek.dashboard';
     $activelaporan = 'kepsek.laporan.index';
+    $activehasilujian = 'kepsek.hasil-ujian.*';
     $profileRoute = 'kepsek.profile.edit';
     }
     else {
     $logoutRoute = 'logout';
     $dashboardRoute = route('dashboard');
     $laporanRoute = route('laporan.index');
+    $hasilUjianRoute = route('hasil-ujian.index');
     $activedashboard = 'dashboard';
     $activelaporan = 'laporan.index';
+    $activehasilujian = 'hasil-ujian.*';
     $profileRoute = 'profile.edit';
     }
     @endphp
@@ -49,6 +57,9 @@
                     </x-nav-link>
                     <x-nav-link :href="$laporanRoute" :active="request()->routeIs($activelaporan)">
                         {{ __('Laporan') }}
+                    </x-nav-link>
+                    <x-nav-link :href="$hasilUjianRoute" :active="request()->routeIs($activehasilujian)">
+                        {{ __('Hasil Ujian') }}
                     </x-nav-link>
                     @if (Auth::guard('admin')->check())
                     <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
@@ -136,6 +147,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="$laporanRoute" :active="request()->routeIs($activelaporan)">
                 {{ __('Laporan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="$hasilUjianRoute" :active="request()->routeIs($activehasilujian)">
+                {{ __('Hasil Ujian') }}
             </x-responsive-nav-link>
             @if (Auth::guard('admin')->check())
             <x-responsive-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
