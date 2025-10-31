@@ -147,6 +147,10 @@ Route::middleware('auth:kepsek')->group(function () {
 
     // Routes untuk Hasil Ujian - Kepsek (Read Only)
     Route::get('/kepsek/hasil-ujian', [HasilUjianController::class, 'index'])->name('kepsek.hasil-ujian.index');
+    // Define import routes for kepsek to avoid missing route errors (kept for parity;
+    // kepsek UI does not show import button by default)
+    Route::post('/kepsek/hasil-ujian/import', [HasilUjianImportController::class, 'import'])->name('kepsek.hasil-ujian.import');
+    Route::get('/kepsek/hasil-ujian/template', [HasilUjianImportController::class, 'downloadTemplate'])->name('kepsek.hasil-ujian.template');
 });
 Route::get('/users/import', [UserImportController::class, 'index'])->name('users.import');
 Route::post('/users/import', [UserImportController::class, 'import'])->name('users.import.store');
