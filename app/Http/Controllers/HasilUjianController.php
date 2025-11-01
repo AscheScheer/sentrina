@@ -131,7 +131,7 @@ class HasilUjianController extends Controller
         // Validation rules
         $rules = [
             'user_id' => 'required|exists:users,id',
-            'tanggal' => 'required|date',
+            'tanggal' => 'nullable|date',
             'juz' => 'required|string|max:20',
             'keterangan' => 'nullable|string|max:500',
         ];
@@ -146,10 +146,14 @@ class HasilUjianController extends Controller
         // Data untuk update
         $updateData = [
             'user_id' => $request->user_id,
-            'tanggal' => $request->tanggal,
             'juz' => $request->juz,
             'keterangan' => $request->keterangan,
         ];
+
+        // Update tanggal hanya jika diisi
+        if ($request->filled('tanggal')) {
+            $updateData['tanggal'] = $request->tanggal;
+        }
 
         // Jika admin, update staff_id juga
         if (Auth::guard('admin')->check()) {

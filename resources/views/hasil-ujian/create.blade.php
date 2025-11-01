@@ -22,28 +22,44 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                             @csrf
 
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="user_id" class="form-label">Nama Santri <span class="text-danger">*</span></label>
-                                    <select name="user_id" id="user_id" class="form-control @error('user_id') is-invalid @enderror" required>
-                                        <option value="">-- Pilih Santri --</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
-                                                {{ $user->name }} - {{ $user->kelompok->nama ?? 'No Group' }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('user_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                                        <div class="mb-3">
+                            <label for="user_search_input" class="form-label">Santri <span class="text-danger">*</span></label>
+                            <div class="position-relative">
+                                <input type="text"
+                                       class="form-control"
+                                       id="user_search_input"
+                                       placeholder="Cari nama santri..."
+                                       autocomplete="off">
+                                <input type="hidden" name="user_id" id="selected_user_id" required>
+
+                                <div id="user_search_dropdown" class="user-search-dropdown">
+                                    @foreach($users as $user)
+                                        <div class="user-search-option"
+                                             data-user-id="{{ $user->id }}"
+                                             data-user-name="{{ $user->name }}">
+                                            <div class="fw-semibold">{{ $user->name }}</div>
+                                            <small class="text-muted">
+                                                {{ $user->kelompok->nama_kelompok ?? 'Tidak ada kelompok' }}
+                                            </small>
+                                        </div>
+                                    @endforeach
                                 </div>
+                            </div>
+                            @error('user_id')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            <div id="user_validation_error" class="text-danger" style="display: none;">
+                                <small>Silakan pilih santri dari daftar.</small>
+                            </div>
+                        </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="tanggal" class="form-label">Tanggal Ujian <span class="text-danger">*</span></label>
                                     <input type="date" name="tanggal" id="tanggal"
-                                           class="form-control @error('tanggal') is-invalid @enderror"
-                                           value="{{ old('tanggal') }}" required>
+                                        class="form-control @error('tanggal') is-invalid @enderror"
+                                        value="{{ old('tanggal') }}" required>
                                     @error('tanggal')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -55,13 +71,13 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                                     <select name="staff_id" id="staff_id" class="form-control @error('staff_id') is-invalid @enderror" required>
                                         <option value="">-- Pilih Staff --</option>
                                         @foreach($staffList as $staff)
-                                            <option value="{{ $staff->id }}" {{ old('staff_id') == $staff->id ? 'selected' : '' }}>
-                                                {{ $staff->name }}
-                                            </option>
+                                        <option value="{{ $staff->id }}" {{ old('staff_id') == $staff->id ? 'selected' : '' }}>
+                                            {{ $staff->name }}
+                                        </option>
                                         @endforeach
                                     </select>
                                     @error('staff_id')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -77,22 +93,22 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                                         <option value="">-- Pilih Juz --</option>
                                         @for($i = 1; $i <= 30; $i++)
                                             <option value="Juz {{ $i }}" {{ old('juz') == "Juz $i" ? 'selected' : '' }}>
-                                                Juz {{ $i }}
+                                            Juz {{ $i }}
                                             </option>
-                                        @endfor
+                                            @endfor
                                     </select>
                                     @error('juz')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="keterangan" class="form-label">Keterangan</label>
                                     <textarea name="keterangan" id="keterangan" rows="3"
-                                              class="form-control @error('keterangan') is-invalid @enderror"
-                                              placeholder="Masukkan keterangan (opsional)">{{ old('keterangan') }}</textarea>
+                                        class="form-control @error('keterangan') is-invalid @enderror"
+                                        placeholder="Masukkan keterangan (opsional)">{{ old('keterangan') }}</textarea>
                                     @error('keterangan')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
@@ -113,7 +129,45 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
     </div>
 
     <style>
-        /* Custom styling for Select2 */
+        /* Custom styling for search dropdown */
+        #user_search_dropdown {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-search-option {
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        .user-search-option:hover {
+            background-color: #f8f9fa !important;
+        }
+
+        .user-search-option:last-child {
+            border-bottom: none !important;
+        }
+
+        /* Focus styling for input */
+        #user_search_input:focus {
+            border-color: #0d6efd;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            #user_search_dropdown {
+                max-height: 150px;
+                font-size: 0.875rem;
+            }
+
+            .user-search-option {
+                padding: 0.5rem 0.75rem;
+            }
+        }
+
+        /* Custom styling for Select2 (for juz dropdown) */
         .select2-container--default .select2-selection--single {
             height: 38px;
             border: 1px solid #ced4da;
@@ -136,16 +190,6 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
             border-radius: 0.375rem;
         }
 
-        .select2-container--default .select2-search--dropdown .select2-search__field {
-            border: 1px solid #ced4da;
-            border-radius: 0.375rem;
-            padding: 0.25rem 0.5rem;
-        }
-
-        .select2-container.select2-container--default.select2-container--open {
-            z-index: 9999;
-        }
-
         .card {
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             border: 1px solid rgba(0, 0, 0, 0.125);
@@ -164,37 +208,160 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
     </style>
 
     <script>
-        $(document).ready(function() {
-            // Initialize Select2 for user dropdown
-            $('#user_id').select2({
-                placeholder: "-- Pilih Santri --",
-                allowClear: true,
-                width: '100%',
-                templateResult: function(data) {
-                    if (!data.id) {
-                        return data.text;
-                    }
+        document.addEventListener('DOMContentLoaded', function() {
+            // User search functionality
+            const userSearchInput = document.getElementById('user_search_input');
+            const userSearchDropdown = document.getElementById('user_search_dropdown');
+            const selectedUserIdInput = document.getElementById('selected_user_id');
+            const userSearchOptions = document.querySelectorAll('.user-search-option');
 
-                    var $result = $('<span>' + data.text + '</span>');
-                    return $result;
-                },
-                templateSelection: function(data) {
-                    return data.text;
+            // Show dropdown when input is focused
+            userSearchInput.addEventListener('focus', function() {
+                userSearchDropdown.style.display = 'block';
+                filterUsers(''); // Show all users initially
+            });
+
+            // Filter users as user types
+            userSearchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterUsers(searchTerm);
+                userSearchDropdown.style.display = 'block';
+
+                // Clear hidden input if search doesn't match any user exactly
+                let exactMatch = false;
+                userSearchOptions.forEach(option => {
+                    if (option.getAttribute('data-user-name').toLowerCase() === searchTerm) {
+                        selectedUserIdInput.value = option.getAttribute('data-user-id');
+                        exactMatch = true;
+                    }
+                });
+                if (!exactMatch) {
+                    selectedUserIdInput.value = '';
                 }
             });
 
-            // Initialize Select2 for juz dropdown
+            // Handle user selection
+            userSearchOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const userId = this.getAttribute('data-user-id');
+                    const userName = this.getAttribute('data-user-name');
+
+                    userSearchInput.value = userName;
+                    selectedUserIdInput.value = userId;
+                    userSearchDropdown.style.display = 'none';
+                });
+            });
+
+            // Hide dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userSearchInput.contains(e.target) && !userSearchDropdown.contains(e.target)) {
+                    userSearchDropdown.style.display = 'none';
+                }
+            });
+
+            // Filter function
+            function filterUsers(searchTerm) {
+                userSearchOptions.forEach(option => {
+                    const userName = option.getAttribute('data-user-name').toLowerCase();
+                    const userText = option.textContent.toLowerCase();
+
+                    if (userName.includes(searchTerm) || userText.includes(searchTerm)) {
+                        option.style.display = 'block';
+                    } else {
+                        option.style.display = 'none';
+                    }
+                });
+            }
+
+            // Keyboard navigation
+            userSearchInput.addEventListener('keydown', function(e) {
+                const visibleOptions = Array.from(userSearchOptions).filter(option =>
+                    option.style.display !== 'none'
+                );
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (visibleOptions.length > 0) {
+                        visibleOptions[0].style.backgroundColor = '#e9ecef';
+                        visibleOptions[0].focus();
+                    }
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const visibleOptions = Array.from(userSearchOptions).filter(option =>
+                        option.style.display !== 'none'
+                    );
+                    if (visibleOptions.length > 0) {
+                        visibleOptions[0].click();
+                    }
+                }
+            });
+
+            // Handle keyboard navigation in dropdown
+            userSearchOptions.forEach((option, index) => {
+                option.setAttribute('tabindex', '0');
+                option.addEventListener('keydown', function(e) {
+                    const visibleOptions = Array.from(userSearchOptions).filter(opt =>
+                        opt.style.display !== 'none'
+                    );
+                    const currentIndex = visibleOptions.indexOf(this);
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        const nextIndex = (currentIndex + 1) % visibleOptions.length;
+                        this.style.backgroundColor = 'white';
+                        visibleOptions[nextIndex].style.backgroundColor = '#e9ecef';
+                        visibleOptions[nextIndex].focus();
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        const prevIndex = currentIndex === 0 ? visibleOptions.length - 1 : currentIndex - 1;
+                        this.style.backgroundColor = 'white';
+                        visibleOptions[prevIndex].style.backgroundColor = '#e9ecef';
+                        visibleOptions[prevIndex].focus();
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function() {
+            // Initialize Select2 for juz dropdown only
             $('#juz').select2({
                 placeholder: "-- Pilih Juz --",
                 allowClear: true,
                 width: '100%'
             });
 
+            // Initialize Select2 for staff dropdown if exists
+            if ($('#staff_id').length) {
+                $('#staff_id').select2({
+                    placeholder: "-- Pilih Staff --",
+                    allowClear: true,
+                    width: '100%'
+                });
+            }
+
             // Set default tanggal to today
             if (!$('#tanggal').val()) {
                 var today = new Date().toISOString().split('T')[0];
                 $('#tanggal').val(today);
             }
+
+            // Form validation on submit
+            $('form').on('submit', function(e) {
+                const selectedUserId = document.getElementById('selected_user_id').value;
+                const userValidationError = document.getElementById('user_validation_error');
+
+                if (!selectedUserId) {
+                    e.preventDefault();
+                    userValidationError.style.display = 'block';
+                    document.getElementById('user_search_input').focus();
+                    return false;
+                } else {
+                    userValidationError.style.display = 'none';
+                }
+            });
         });
     </script>
 </x-app-layout>
