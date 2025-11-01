@@ -8,7 +8,7 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : (request()->is('kepsek/*') ? 
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3 ">
             <div style="overflow-x: auto; white-space: nowrap;" class="mb-3">
-                {{ $hasilUjian->links() }}
+                <x-pagination-responsive :paginator="$hasilUjian" />
             </div>
             @if (!auth()->guard('kepsek')->check())
             <div class="d-flex gap-2 mb-3">

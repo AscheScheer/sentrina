@@ -119,7 +119,29 @@
             </tbody>
         </table>
         <div class="flex justify-center my-4 py-3" style="background-color: #f0f4fa; border-top: 1px solid #b0c4de;">
-            {{ $users->onEachSide(1)->links() }}
+            <div class="w-100">
+                <!-- Mobile: compact pagination -->
+                <div class="d-sm-none d-flex align-items-center justify-content-between gap-2 px-3">
+                    @if ($users->onFirstPage())
+                        <span class="btn btn-light disabled px-3 py-1">Sebelumnya</span>
+                    @else
+                        <a href="{{ $users->previousPageUrl() }}" class="btn btn-outline-primary px-3 py-1">Sebelumnya</a>
+                    @endif
+
+                    <small class="text-muted">Halaman {{ $users->currentPage() }} / {{ $users->lastPage() }}</small>
+
+                    @if ($users->hasMorePages())
+                        <a href="{{ $users->nextPageUrl() }}" class="btn btn-outline-primary px-3 py-1">Berikutnya</a>
+                    @else
+                        <span class="btn btn-light disabled px-3 py-1">Berikutnya</span>
+                    @endif
+                </div>
+
+                <!-- Desktop/Tablet: full pagination -->
+                <div class="d-none d-sm-block">
+                    {{ $users->onEachSide(1)->links('pagination::bootstrap-5') }}
+                </div>
+            </div>
         </div>
         @endif
 

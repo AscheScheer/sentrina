@@ -4,7 +4,7 @@ $routelaporan = route('kepsek.laporan.index');
 <x-app-layout>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div style="overflow-x: auto; white-space: nowrap;" class="mb-3">
-            {{ $laporan->links() }}
+            <x-pagination-responsive :paginator="$laporan" />
         </div>
 
         @if (session('success'))

@@ -15,7 +15,7 @@
                 </div>
             </div>
             @endif
-            {{ $staffs->links() }}
+            <x-pagination-responsive :paginator="$staffs" />
         </div>
 
         @if (session('success'))

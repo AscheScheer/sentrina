@@ -5,7 +5,7 @@ $routelaporan = route('staff.laporan.index');
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3 ">
             <div style="overflow-x: auto; white-space: nowrap;" class="mb-3">
-                {{ $laporan->links() }}
+                <x-pagination-responsive :paginator="$laporan" />
             </div>
             <a href="{{ route('staff.laporan.create') }}"
                 style="margin-bottom: 10px; display: inline-block;">

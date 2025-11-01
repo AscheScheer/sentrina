@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3">
-            {{ $kelompoks->links() }}
+
 
             @if (auth()->guard('admin')->check())
             <div class="flex flex-row gap-2 mb-2">
@@ -81,6 +81,10 @@
                 @endforeach
             </tbody>
         </table>
+        <div class="mb-4">
+        <x-pagination-responsive :paginator="$kelompoks" />
+        </div>
+
         @endif
     </div>
 </x-app-layout>

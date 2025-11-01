@@ -8,7 +8,7 @@
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3">
             <div style="overflow-x: auto; white-space: nowrap;" class="mb-3">
-                {{ $hasilUjian->links() }}
+                <x-pagination-responsive :paginator="$hasilUjian" />
             </div>
 
             <!-- Statistics Cards -->

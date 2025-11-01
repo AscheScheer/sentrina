@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
         <div class="relative p-3">
-            {{ $admins->links() }}
+            <x-pagination-responsive :paginator="$admins" />
             @if (auth()->guard('admin')->check())
             <a href="{{ route('admin.admin.create') }}"
                 style="margin-bottom: 10px; display: inline-block;">

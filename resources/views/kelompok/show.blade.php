@@ -81,7 +81,7 @@
 
                 <!-- Pagination -->
                 <div class="mt-4">
-                    {{ $users->links() }}
+                    <x-pagination-responsive :paginator="$users" />
                 </div>
                 @endif
             </div>
