@@ -22,36 +22,36 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                             @csrf
 
                             <div class="row">
-                                                        <div class="mb-3">
-                            <label for="user_search_input" class="form-label">Santri <span class="text-danger">*</span></label>
-                            <div class="position-relative">
-                                <input type="text"
-                                       class="form-control"
-                                       id="user_search_input"
-                                       placeholder="Cari nama santri..."
-                                       autocomplete="off">
-                                <input type="hidden" name="user_id" id="selected_user_id" required>
+                                <div class="mb-3">
+                                    <label for="user_search_input" class="form-label">Santri <span class="text-danger">*</span></label>
+                                    <div class="position-relative">
+                                        <input type="text"
+                                            class="form-control"
+                                            id="user_search_input"
+                                            placeholder="Cari nama santri..."
+                                            autocomplete="off">
+                                        <input type="hidden" name="user_id" id="selected_user_id" required>
 
-                                <div id="user_search_dropdown" class="user-search-dropdown">
-                                    @foreach($users as $user)
-                                        <div class="user-search-option"
-                                             data-user-id="{{ $user->id }}"
-                                             data-user-name="{{ $user->name }}">
-                                            <div class="fw-semibold">{{ $user->name }}</div>
-                                            <small class="text-muted">
-                                                {{ $user->kelompok->nama_kelompok ?? 'Tidak ada kelompok' }}
-                                            </small>
+                                        <div id="user_search_dropdown" class="user-search-dropdown">
+                                            @foreach($users as $user)
+                                            <div class="user-search-option"
+                                                data-user-id="{{ $user->id }}"
+                                                data-user-name="{{ $user->name }}">
+                                                <div class="fw-semibold">{{ $user->name }}</div>
+                                                <small class="text-muted">
+                                                    {{ $user->kelompok->nama_kelompok ?? 'Tidak ada kelompok' }}
+                                                </small>
+                                            </div>
+                                            @endforeach
                                         </div>
-                                    @endforeach
+                                    </div>
+                                    @error('user_id')
+                                    <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                    <div id="user_validation_error" class="text-danger" style="display: none;">
+                                        <small>Silakan pilih santri dari daftar.</small>
+                                    </div>
                                 </div>
-                            </div>
-                            @error('user_id')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                            <div id="user_validation_error" class="text-danger" style="display: none;">
-                                <small>Silakan pilih santri dari daftar.</small>
-                            </div>
-                        </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="tanggal" class="form-label">Tanggal Ujian <span class="text-danger">*</span></label>
@@ -130,22 +130,74 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
 
     <style>
         /* Custom styling for search dropdown */
-        #user_search_dropdown {
+        .user-search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
             border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
+            border-top: none;
+            border-radius: 0 0 0.375rem 0.375rem;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1050;
+            display: none;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .user-search-option {
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f0f0;
             transition: background-color 0.15s ease-in-out;
         }
 
-        .user-search-option:hover {
-            background-color: #f8f9fa !important;
+        .user-search-option:hover,
+        .user-search-option:focus {
+            background-color: #e9ecef;
+            outline: none;
         }
 
         .user-search-option:last-child {
-            border-bottom: none !important;
+            border-bottom: none;
+        }
+
+        /* Custom scrollbar for dropdown */
+        .user-search-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .user-search-dropdown::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .user-search-dropdown::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .user-search-dropdown::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Scrollbar for Firefox */
+        .user-search-dropdown {
+            scrollbar-width: thin;
+            scrollbar-color: #c1c1c1 #f1f1f1;
+        }
+
+        /* Fade effect for scrollable content */
+        .user-search-dropdown.has-scroll::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.8));
+            pointer-events: none;
         }
 
         /* Focus styling for input */
@@ -157,13 +209,13 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
 
         /* Mobile responsive adjustments */
         @media (max-width: 768px) {
-            #user_search_dropdown {
+            .user-search-dropdown {
                 max-height: 150px;
                 font-size: 0.875rem;
             }
 
             .user-search-option {
-                padding: 0.5rem 0.75rem;
+                padding: 0.4rem 0.6rem;
             }
         }
 
@@ -261,16 +313,27 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
 
             // Filter function
             function filterUsers(searchTerm) {
+                let visibleCount = 0;
                 userSearchOptions.forEach(option => {
                     const userName = option.getAttribute('data-user-name').toLowerCase();
                     const userText = option.textContent.toLowerCase();
 
                     if (userName.includes(searchTerm) || userText.includes(searchTerm)) {
                         option.style.display = 'block';
+                        visibleCount++;
                     } else {
                         option.style.display = 'none';
                     }
                 });
+
+                // Add scroll indicator if needed
+                setTimeout(() => {
+                    if (userSearchDropdown.scrollHeight > userSearchDropdown.clientHeight) {
+                        userSearchDropdown.classList.add('has-scroll');
+                    } else {
+                        userSearchDropdown.classList.remove('has-scroll');
+                    }
+                }, 10);
             }
 
             // Keyboard navigation
@@ -284,6 +347,8 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                     if (visibleOptions.length > 0) {
                         visibleOptions[0].style.backgroundColor = '#e9ecef';
                         visibleOptions[0].focus();
+                        // Scroll to top when entering dropdown
+                        userSearchDropdown.scrollTop = 0;
                     }
                 } else if (e.key === 'Enter') {
                     e.preventDefault();
@@ -311,12 +376,22 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                         this.style.backgroundColor = 'white';
                         visibleOptions[nextIndex].style.backgroundColor = '#e9ecef';
                         visibleOptions[nextIndex].focus();
+                        // Scroll into view
+                        visibleOptions[nextIndex].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest'
+                        });
                     } else if (e.key === 'ArrowUp') {
                         e.preventDefault();
                         const prevIndex = currentIndex === 0 ? visibleOptions.length - 1 : currentIndex - 1;
                         this.style.backgroundColor = 'white';
                         visibleOptions[prevIndex].style.backgroundColor = '#e9ecef';
                         visibleOptions[prevIndex].focus();
+                        // Scroll into view
+                        visibleOptions[prevIndex].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest'
+                        });
                     } else if (e.key === 'Enter') {
                         e.preventDefault();
                         this.click();

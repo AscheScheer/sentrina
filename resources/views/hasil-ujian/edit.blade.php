@@ -149,20 +149,21 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
     </div>
 
     <style>
-        /* Custom styling for user search dropdown */
+        /* Custom styling for search dropdown */
         .user-search-dropdown {
             position: absolute;
             top: 100%;
             left: 0;
             right: 0;
             background: white;
-            border: 1px solid #ced4da;
+            border: 1px solid #dee2e6;
             border-top: none;
             border-radius: 0 0 0.375rem 0.375rem;
             max-height: 200px;
             overflow-y: auto;
             z-index: 1050;
             display: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .user-search-option {
@@ -180,6 +181,62 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
 
         .user-search-option:last-child {
             border-bottom: none;
+        }
+
+        /* Custom scrollbar for dropdown */
+        .user-search-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .user-search-dropdown::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .user-search-dropdown::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+
+        .user-search-dropdown::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+
+        /* Scrollbar for Firefox */
+        .user-search-dropdown {
+            scrollbar-width: thin;
+            scrollbar-color: #c1c1c1 #f1f1f1;
+        }
+
+        /* Fade effect for scrollable content */
+        .user-search-dropdown.has-scroll::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.8));
+            pointer-events: none;
+        }
+
+        /* Focus styling for input */
+        #user_search_input:focus {
+            border-color: #0d6efd;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .user-search-dropdown {
+                max-height: 150px;
+                font-size: 0.875rem;
+            }
+
+            .user-search-option {
+                padding: 0.4rem 0.6rem;
+            }
         }
 
         /* Custom styling for Select2 (for remaining dropdowns) */
@@ -286,16 +343,27 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
 
             // Filter function
             function filterUsers(searchTerm) {
+                let visibleCount = 0;
                 userSearchOptions.forEach(option => {
                     const userName = option.getAttribute('data-user-name').toLowerCase();
                     const userText = option.textContent.toLowerCase();
 
                     if (userName.includes(searchTerm) || userText.includes(searchTerm)) {
                         option.style.display = 'block';
+                        visibleCount++;
                     } else {
                         option.style.display = 'none';
                     }
                 });
+
+                // Add scroll indicator if needed
+                setTimeout(() => {
+                    if (userSearchDropdown.scrollHeight > userSearchDropdown.clientHeight) {
+                        userSearchDropdown.classList.add('has-scroll');
+                    } else {
+                        userSearchDropdown.classList.remove('has-scroll');
+                    }
+                }, 10);
             }
 
             // Keyboard navigation
@@ -309,6 +377,8 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                     if (visibleOptions.length > 0) {
                         visibleOptions[0].style.backgroundColor = '#e9ecef';
                         visibleOptions[0].focus();
+                        // Scroll to top when entering dropdown
+                        userSearchDropdown.scrollTop = 0;
                     }
                 } else if (e.key === 'Enter') {
                     e.preventDefault();
@@ -336,12 +406,22 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                         this.style.backgroundColor = 'white';
                         visibleOptions[nextIndex].style.backgroundColor = '#e9ecef';
                         visibleOptions[nextIndex].focus();
+                        // Scroll into view
+                        visibleOptions[nextIndex].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest'
+                        });
                     } else if (e.key === 'ArrowUp') {
                         e.preventDefault();
                         const prevIndex = currentIndex === 0 ? visibleOptions.length - 1 : currentIndex - 1;
                         this.style.backgroundColor = 'white';
                         visibleOptions[prevIndex].style.backgroundColor = '#e9ecef';
                         visibleOptions[prevIndex].focus();
+                        // Scroll into view
+                        visibleOptions[prevIndex].scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest'
+                        });
                     } else if (e.key === 'Enter') {
                         e.preventDefault();
                         this.click();
