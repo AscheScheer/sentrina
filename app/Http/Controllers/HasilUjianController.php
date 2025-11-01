@@ -50,6 +50,16 @@ class HasilUjianController extends Controller
     {
         $users = User::with('kelompok')->get();
 
+        // Debug: cek beberapa sample data
+        // dd($users->take(3)->map(function($user) {
+        //     return [
+        //         'id' => $user->id,
+        //         'name' => $user->name,
+        //         'kelompok_id' => $user->kelompok_id,
+        //         'kelompok_nama' => $user->kelompok ? $user->kelompok->nama : null
+        //     ];
+        // }));
+
         // Jika admin, sertakan daftar staff untuk dipilih
         if (Auth::guard('admin')->check()) {
             $staffList = \App\Models\Staff::all();

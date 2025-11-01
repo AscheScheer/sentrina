@@ -39,7 +39,7 @@ $rolePrefix = request()->is('admin/*') ? 'admin' : 'staff';
                                                 data-user-name="{{ $user->name }}">
                                                 <div class="fw-semibold">{{ $user->name }}</div>
                                                 <small class="text-muted">
-                                                    {{ $user->kelompok->nama_kelompok ?? 'Tidak ada kelompok' }}
+                                                    {{ $user->kelompok->nama ?? 'Tidak ada kelompok' }}
                                                 </small>
                                             </div>
                                             @endforeach
