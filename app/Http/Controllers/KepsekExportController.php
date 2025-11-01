@@ -9,17 +9,17 @@ use App\Models\User;
 use App\Models\Kelompok;
 
 
-class AdminExportController extends Controller
+class KepsekExportController extends Controller
 {
     /**
-     * Tampilkan form export laporan untuk admin.
+     * Tampilkan form export laporan untuk kepsek.
      */
     public function exportForm()
     {
         $users = User::all();
         $kelompoks = Kelompok::all();
 
-        return view('laporan.admin-export-form', compact('users', 'kelompoks'));
+        return view('laporan.kepsek-export-form', compact('users', 'kelompoks'));
     }
 
     /**
@@ -61,7 +61,7 @@ class AdminExportController extends Controller
         ]);
 
         // Generate filename with filters
-        $filename = "laporan_admin_{$start}_to_{$end}";
+        $filename = "laporan_kepsek_{$start}_to_{$end}";
         if ($username) {
             $filename .= "_" . str_replace(' ', '_', $username);
         }

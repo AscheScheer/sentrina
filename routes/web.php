@@ -16,6 +16,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\StaffExportController;
 use App\Http\Controllers\AdminExportController;
+use App\Http\Controllers\KepsekExportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\KepsekLoginController;
 use App\Http\Controllers\HasilUjianController;
@@ -80,6 +81,9 @@ Route::middleware('auth:staff')->group(function () {
     // Import routes untuk Hasil Ujian - Staff
     Route::post('/staff/hasil-ujian/import', [HasilUjianImportController::class, 'import'])->name('staff.hasil-ujian.import');
     Route::get('/staff/hasil-ujian/template', [HasilUjianImportController::class, 'downloadTemplate'])->name('staff.hasil-ujian.template');
+
+    // Export routes untuk Laporan - Staff
+    Route::get('/staff/export-form', [StaffExportController::class, 'exportForm'])->name('staff.export.form');
 });
 // Admin login routes
 Route::get('/admin/login', [AdminLoginController::class, 'showLoginForm'])->name('admin.login');
@@ -107,7 +111,11 @@ Route::middleware('auth:admin')->group(function () {
         Route::resource('kelompoks', KelompokController::class);
     });
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+    // Export routes untuk Laporan - Admin
+    Route::get('/admin/export-form', [AdminExportController::class, 'exportForm'])->name('admin.export.form');
     Route::get('/admin/export-pdf', [AdminExportController::class, 'exportPdf'])->name('admin.export.pdf');
+
     Route::get('/admin/profile', [AdminController::class, 'editProfile'])->name('admin.profile.edit');
     Route::post('/admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
 
@@ -140,7 +148,10 @@ Route::middleware('auth:kepsek')->group(function () {
     Route::get('/kepsek/users', [UserController::class, 'index'])->name('kepsek.users.index');
     Route::get('/kepsek/staff', [StaffController::class, 'index'])->name('kepsek.staff.index');
     Route::get('/kepsek/admin', [AdminController::class, 'index'])->name('kepsek.admin.index');
-    Route::get('/kepsek/export-pdf', [App\Http\Controllers\ExportController::class, 'exportPdf'])->name('kepsek.export.pdf');
+
+    // Export routes untuk Laporan - Kepsek
+    Route::get('/kepsek/export-form', [KepsekExportController::class, 'exportForm'])->name('kepsek.export.form');
+    Route::get('/kepsek/export-pdf', [KepsekExportController::class, 'exportPdf'])->name('kepsek.export.pdf');
     Route::get('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'editProfile'])->name('kepsek.profile.edit');
     Route::post('/kepsek/profile', [App\Http\Controllers\KepsekController::class, 'updateProfile'])->name('kepsek.profile.update');
     Route::resource('kepsek/kelompoks', KelompokController::class)->names('kepsek.kelompoks');
