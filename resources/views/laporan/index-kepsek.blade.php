@@ -1,5 +1,5 @@
 @php
-$routelaporan = route('laporan.index');
+$routelaporan = route('kepsek.laporan.index');
 @endphp
 <x-app-layout>
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg container">
@@ -124,17 +124,6 @@ $routelaporan = route('laporan.index');
                                     <label for="modal_tanggal" class="form-label">Filter Tanggal</label>
                                     <input type="date" name="tanggal" id="modal_tanggal"
                                            value="{{ request('tanggal') }}" class="form-control">
-                                </div>
-                                <div class="col-12">
-                                    <label for="modal_username" class="form-label">Filter Nama</label>
-                                    <select name="username" id="modal_username" class="form-select">
-                                        <option value="">-- Pilih User --</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->name }}" {{ request('username') == $user->name ? 'selected' : '' }}>
-                                                {{ $user->name }}
-                                            </option>
-                                        @endforeach
-                                    </select>
                                 </div>
                                 <div class="col-12">
                                     <label for="modal_kelompok" class="form-label">Filter Kelompok</label>
